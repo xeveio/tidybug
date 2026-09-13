@@ -1,0 +1,83 @@
+name: Release
+
+# Push a tag like `tidybug-v1.0.1` to build, notarize, sign the Sparkle
+# update and publish it to dl.xeve.io/tidybug/. All the real work lives in
+# scripts/release.sh so local and CI releases are identical.
+#
+# Required repository secrets:
+#   DEVELOPER_ID_CERTIFICATE_P12       base64 of the "Developer ID Application" .p12 (team KD8GRYUXWZ)
+#   DEVELOPER_ID_CERTIFICATE_PASSWORD  its export password
+#   NOTARY_API_KEY_P8                  base64 of an App Store Connect API key (.p8)
+#   NOTARY_KEY_ID / NOTARY_ISSUER      that key's ID and issuer
+#   SPARKLE_ED_KEY                     contents of ~/.secrets/tidybug-sparkle-ed25519.key
+#   DO_SPACES_KEY / DO_SPACES_SECRET   write access to the xeve-downloads Space
+
+on:
+  push:
+    tags:
+      - 'tidybug-v*'
+
+permissions:
+  contents: write # gh release create
+
+jobs:
+  release:
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#tidybug-v}" >> "$GITHUB_OUTPUT"
+
+      - name: Tools
+        run: brew install xcodegen
+
+      - name: Import signing certificate
+        env:
+          P12: ${{ secrets.DEVELOPER_ID_CERTIFICATE_P12 }}
+          P12_PASSWORD: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -base64 32)"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          echo -n "$P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          rm -f "$RUNNER_TEMP/cert.p12"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          echo "KEYCHAIN=$KEYCHAIN" >> "$GITHUB_ENV"
+
+      - name: Write notarization + Sparkle keys
+        env:
+          NOTARY_API_KEY_P8: ${{ secrets.NOTARY_API_KEY_P8 }}
+          SPARKLE_ED_KEY: ${{ secrets.SPARKLE_ED_KEY }}
+        run: |
+          echo -n "$NOTARY_API_KEY_P8" | base64 --decode > "$RUNNER_TEMP/notary.p8"
+          echo -n "$SPARKLE_ED_KEY" > "$RUNNER_TEMP/sparkle.key"
+          chmod 600 "$RUNNER_TEMP/notary.p8" "$RUNNER_TEMP/sparkle.key"
+          echo "NOTARY_KEY_PATH=$RUNNER_TEMP/notary.p8" >> "$GITHUB_ENV"
+          echo "SPARKLE_KEY_FILE=$RUNNER_TEMP/sparkle.key" >> "$GITHUB_ENV"
+
+      - name: Release
+        env:
+          NOTARY_KEY_ID: ${{ secrets.NOTARY_KEY_ID }}
+          NOTARY_ISSUER: ${{ secrets.NOTARY_ISSUER }}
+          DO_SPACES_KEY: ${{ secrets.DO_SPACES_KEY }}
+          DO_SPACES_SECRET: ${{ secrets.DO_SPACES_SECRET }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NOTES_ARG=()
+          if [ -f "release-notes/${{ steps.version.outputs.VERSION }}.md" ]; then
+            NOTES_ARG=(--notes "release-notes/${{ steps.version.outputs.VERSION }}.md")
+          fi
+          scripts/release.sh "${{ steps.version.outputs.VERSION }}" "${NOTES_ARG[@]}" --upload --github
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP/notary.p8" "$RUNNER_TEMP/sparkle.key"
+          [ -n "${KEYCHAIN:-}" ] && security delete-keychain "$KEYCHAIN" || true

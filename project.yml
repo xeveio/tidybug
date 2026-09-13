@@ -1,0 +1,78 @@
+name: TidyBug
+options:
+  bundleIdPrefix: com.xeve
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+packages:
+  TidyBugCore:
+    path: Packages/TidyBugCore
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: "2.6.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1.0.0"
+targets:
+  TidyBug:
+    type: application
+    platform: macOS
+    sources:
+      - path: TidyBug
+    dependencies:
+      - package: TidyBugCore
+      - package: Sparkle
+        product: Sparkle
+    info:
+      path: TidyBug/Info.plist
+      properties:
+        CFBundleDisplayName: TidyBug
+        CFBundleName: TidyBug
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.utilities
+        LSMinimumSystemVersion: "26.0"
+        NSHumanReadableCopyright: "© 2026 Xeve"
+        # Sparkle auto-updates.
+        #
+        # SUFeedURL is compiled into every shipped binary and can never be
+        # changed for users who don't update, so it points at dl.xeve.io (a
+        # Cloudflare Worker we control) rather than at any storage host
+        # directly. The Worker proxies to the xeve-downloads Space; the
+        # backend behind it can move without breaking installed copies.
+        SUFeedURL: https://dl.xeve.io/tidybug/appcast.xml
+        # TidyBug's own EdDSA key (Keychain account "tidybug"), NOT xeve's.
+        SUPublicEDKey: "cAoRRZeqMVCB5+j93Qguj9lcwPdr99q6M182zoVEh8A="
+        SUEnableAutomaticChecks: true
+        SUAllowsAutomaticUpdates: true
+        SUScheduledCheckInterval: 86400
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.xeve.tidybug
+        PRODUCT_NAME: TidyBug
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_APP_SANDBOX: NO
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "Developer ID Application"
+        PROVISIONING_PROFILE_SPECIFIER: ""
+        DEVELOPMENT_TEAM: KD8GRYUXWZ
+        COMBINE_HIDPI_IMAGES: YES
+      configs:
+        Release:
+          # Notarization requires a secure timestamp on every signature and
+          # rejects the get-task-allow debugging entitlement.
+          OTHER_CODE_SIGN_FLAGS: "--timestamp"
+          CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+          ONLY_ACTIVE_ARCH: NO
+schemes:
+  TidyBug:
+    build:
+      targets:
+        TidyBug: all
+    run:
+      config: Debug
+    archive:
+      config: Release
