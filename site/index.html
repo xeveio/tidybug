@@ -252,6 +252,42 @@ footer a:hover{color:var(--text)}
 .pal li .i{width:18px;color:var(--text-2);text-align:center;font-family:var(--mono);font-size:12px}
 .pal footer{all:unset;display:flex;gap:14px;justify-content:flex-end;padding:9px 14px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-3)}
 .pal footer span{display:inline-flex;gap:6px;align-items:center}
+/* ---------- github ---------- */
+.gh{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--text-2);font-size:13.5px;padding:6px 10px;border-radius:7px;border:1px solid var(--border)}
+.gh:hover{color:var(--text);border-color:var(--border-2)}
+.gh svg,.btn .gh-i{width:16px;height:16px}
+.gh b{font:500 12px/1 var(--mono);color:var(--text);display:none}
+.gh b.on{display:inline}
+@media (max-width:600px){.gh span{display:none}}
+
+/* ---------- notch demo ---------- */
+.card.full{grid-column:span 12}
+.notch-demo{position:relative;height:230px;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:6px;
+  background:radial-gradient(80% 120% at 20% 0%,#3a5f9e,transparent 60%),radial-gradient(70% 120% at 90% 10%,#6b3f8f,transparent 60%),linear-gradient(180deg,#1c2b4a,#0e1526)}
+.mbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(15,22,40,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font:600 12.5px var(--sans);color:#eef2fb}
+.mbar .l{display:flex;gap:16px}.mbar .l span:first-child{font-size:14px}
+.mbar .r{display:flex;gap:14px;opacity:.85;font-weight:500}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:330px;height:30px;background:#000;border-radius:0 0 13px 13px;cursor:pointer;overflow:hidden;
+  transition:width .5s cubic-bezier(.2,.9,.25,1.12),height .5s cubic-bezier(.2,.9,.25,1.12),border-radius .5s}
+.notch .wings{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font:600 12px/1 var(--mono);color:#fff}
+.notch .wings span{display:inline-flex;align-items:center;gap:6px;min-width:52px}
+.notch .wings span:last-child{justify-content:flex-end}
+.notch .wings svg{width:12px;height:12px;opacity:.6}
+.notch .panel{position:absolute;left:16px;right:16px;top:40px;display:grid;gap:12px;opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .35s}
+.notch.open{width:min(460px,92%);height:186px;border-radius:0 0 28px 28px}
+.notch.open .panel{opacity:1;transform:none;transition-delay:.12s}
+.np-rows{background:rgba(255,255,255,.05);border-radius:12px;padding:10px 12px;display:grid;gap:9px}
+.np-row{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font:600 12px var(--sans);color:#fff}
+.np-row small{font:400 11px var(--mono);color:#8C919A;margin-left:6px}
+.np-row .bar{grid-column:1/-1}
+.np-stats{display:grid;grid-template-columns:repeat(4,1fr);font:400 10.5px var(--sans);color:#8C919A;gap:4px}
+.np-stats b{display:block;font:600 12px var(--mono);color:#fff}
+.notch-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:12.5px;color:rgba(238,242,251,.7)}
+.term .ok{color:var(--success)}
+.oss{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,5vw,64px);align-items:center}
+@media (max-width:980px){.oss{grid-template-columns:minmax(0,1fr)}}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.badge-row span{font:500 11.5px/1 var(--mono);color:var(--text-2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;background:var(--surface)}
 .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
 .reveal.in{opacity:1;transform:none}
 </style>
@@ -270,7 +306,11 @@ footer a:hover{color:var(--text)}
       <a href="#safety">Safety</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <button class="cmdk" type="button" data-open-palette aria-label="Open command palette">
+    <a class="gh" href="https://github.com/xeveio/tidybug" aria-label="TidyBug on GitHub" style="margin-left:auto">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>GitHub</span><b data-stars></b>
+    </a>
+    <button class="cmdk" type="button" data-open-palette aria-label="Open command palette" style="margin-left:0">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <span>Search or run a command</span><kbd>⌘K</kbd>
     </button>
@@ -290,7 +330,10 @@ footer a:hover{color:var(--text)}
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.5 2.1-3.7 2.2-3.8-1.2-1.7-3-2-3.7-2-1.6-.2-3 .9-3.8.9s-2-.9-3.3-.8c-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.6 1.3 10.1.9 1.2 1.9 2.6 3.2 2.5 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.2 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.8-4zM13.9 5c.7-.8 1.2-2 1-3.2-1 0-2.2.7-2.9 1.5-.7.8-1.2 1.9-1.1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>
           Download for Mac <small id="dl-version">v1.0.0</small>
         </a>
-        <a class="btn ghost" href="#features">See what it does</a>
+        <a class="btn ghost" href="https://github.com/xeveio/tidybug">
+          <svg class="gh-i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          View on GitHub
+        </a>
       </div>
       <p class="hint">↘ <span><b>Try it.</b> Hover the map, click to zoom, drag a slice into the Collector.</span></p>
       <div class="facts"><span>Free &amp; open source</span><span>Notarized by Apple</span><span>No tracking in the app</span><span>Apple silicon &amp; Intel</span></div>
@@ -433,6 +476,29 @@ footer a:hover{color:var(--text)}
         <h3>Menu bar companion</h3>
         <p>Free space at a glance, live CPU and memory, and a one-click clean of safe items, without opening the app. Low-space alerts arrive as notifications.</p>
       </article>
+
+      <article class="card full reveal" id="f-notch">
+        <div class="tag"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#EDEEF0" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M9 4v1.5a1.5 1.5 0 0 0 1.5 1.5h3A1.5 1.5 0 0 0 15 5.5V4"/></svg></span><span>New</span></div>
+        <h3>Notch overlay</h3>
+        <p>Live CPU and memory sit beside the notch, even with the app closed. Hover it to expand into swap, GPU, network and disk, with quick actions. Hover the one below.</p>
+        <div class="notch-demo" aria-label="Interactive preview of the notch overlay">
+          <div class="mbar"><div class="l"><span>Xcode</span><span>File</span><span>Edit</span><span>View</span></div><div class="r"><span>⌘</span><span>Wi‑Fi</span><span>Tue 9:41</span></div></div>
+          <div class="notch" id="notch" tabindex="0" role="button" aria-label="Expand the notch overlay">
+            <div class="wings">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg><em id="n-cpu" style="font-style:normal">–</em></span>
+              <span><em id="n-mem" style="font-style:normal;color:var(--success)">71%</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 17v3M12 17v3M17 17v3"/></svg></span>
+            </div>
+            <div class="panel">
+              <div class="np-rows">
+                <div class="np-row"><span>CPU<small>10P + 4E cores</small></span><span id="np-cpu">–</span><div class="bar"><i id="np-cpu-bar" style="width:0;background:var(--info)"></i></div></div>
+                <div class="np-row"><span>Memory<small>17.1 / 24 GB · Normal</small></span><span>71%</span><div class="bar"><i style="width:71%;background:var(--success)"></i></div></div>
+              </div>
+              <div class="np-stats"><span>Swap<b>1.7 GB</b></span><span>GPU<b>14%</b></span><span>Network<b>2.1M ↓</b></span><span>Disk free<b>212 GB</b></span></div>
+            </div>
+          </div>
+          <div class="notch-hint">Hover or tap the notch</div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -469,6 +535,30 @@ footer a:hover{color:var(--text)}
   </div>
 </section>
 
+<section id="open-source" aria-labelledby="oss-title" style="padding-top:0">
+  <div class="wrap oss">
+    <div class="head" style="margin-bottom:0">
+      <span class="eyebrow">Open source · GPL-3.0</span>
+      <h2 id="oss-title">Read every line that deletes.</h2>
+      <p class="lead">An app that removes files should be auditable. TidyBug is free software: the scanner, the clean rules and the safety guard that decides what may never be touched are all on GitHub. Issues and pull requests welcome.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/xeveio/tidybug">
+          <svg class="gh-i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Star on GitHub <small data-stars></small>
+        </a>
+        <a class="btn ghost" href="https://github.com/xeveio/tidybug/blob/main/Packages/TidyBugCore/Sources/TidyBugCore/SafetyGuard.swift">Read SafetyGuard.swift</a>
+      </div>
+      <div class="badge-row"><span>Swift 6 · SwiftUI</span><span>macOS 26</span><span>No telemetry in the app</span><span>GPL-3.0</span></div>
+    </div>
+    <div class="term reveal" aria-label="Build from source" style="white-space:pre-wrap"><span class="p">$</span> <span class="c">git clone https://github.com/xeveio/tidybug.git</span>
+<span class="p">$</span> <span class="c">cd tidybug &amp;&amp; xcodegen generate</span>
+<span class="p">$</span> <span class="c">xcodebuild -scheme TidyBug CODE_SIGNING_ALLOWED=NO build</span>
+<span class="ok">** BUILD SUCCEEDED **</span>
+<span class="p">$</span> <span class="c">cd Packages/TidyBugCore &amp;&amp; swift test</span>
+<span class="ok">✔ All tests passed</span></div>
+  </div>
+</section>
+
 <section id="download" aria-labelledby="download-title" style="padding-top:0">
   <div class="wrap">
     <div class="dl">
@@ -502,7 +592,7 @@ footer a:hover{color:var(--text)}
 
 <footer>
   <div class="wrap">
-    <span>© 2026 Xeve</span>
+    <span>© 2026 Xeve · <a href="https://github.com/xeveio/tidybug/blob/main/LICENSE">GPL-3.0</a></span>
     <span class="mono" style="font-size:12px">Made for developers who keep running out of disk.</span>
     <nav><a href="#features">Features</a><a href="#safety">Safety</a><a href="/download">Download</a><a href="https://github.com/xeveio/tidybug">GitHub</a><a href="https://xeve.io">xeve.io</a></nav>
   </div>
@@ -779,6 +869,37 @@ footer a:hover{color:var(--text)}
   }
   spark(); if (!reduce) setInterval(spark, 900);
 
+  /* ================= Notch demo ================= */
+  const notch = $("#notch");
+  let nFirst = true;
+  function notchTick() {
+    // First reading shows "–", like the app before its first CPU delta.
+    const v = Math.round(pts[pts.length - 1]);
+    const first = nFirst;
+    nFirst = false;
+    const txt = first ? "–" : v + "%";
+    $("#n-cpu").textContent = txt;
+    $("#np-cpu").textContent = txt;
+    $("#np-cpu-bar").style.width = (first ? 0 : v) + "%";
+  }
+  notchTick(); setInterval(notchTick, 1000);
+  let nTimer;
+  const setOpen = on => notch.classList.toggle("open", on);
+  notch.addEventListener("mouseenter", () => { clearTimeout(nTimer); nTimer = setTimeout(() => setOpen(true), 150); });
+  notch.addEventListener("mouseleave", () => { clearTimeout(nTimer); setOpen(false); });
+  notch.addEventListener("click", () => setOpen(!notch.classList.contains("open")));
+  notch.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(!notch.classList.contains("open")); } });
+  // Show it off once when it scrolls into view.
+  new IntersectionObserver((es, o) => es.forEach(e => {
+    if (e.isIntersecting && !reduce) { setTimeout(() => setOpen(true), 500); setTimeout(() => { if (!notch.matches(":hover")) setOpen(false); }, 3200); o.disconnect(); }
+  }), { threshold: 0.6 }).observe(notch);
+
+  /* ================= GitHub stars ================= */
+  fetch("https://api.github.com/repos/xeveio/tidybug").then(r => r.ok ? r.json() : null).then(d => {
+    if (!d || !d.stargazers_count) return;
+    document.querySelectorAll("[data-stars]").forEach(el => { el.textContent = "★ " + d.stargazers_count.toLocaleString(); el.classList.add("on"); });
+  }).catch(() => {});
+
   /* ================= Screens gallery ================= */
   const SHOTS = [
     ["overview", "Overview", "Storage breakdown, reclaimable space by category, largest items and recent activity."],
@@ -829,6 +950,7 @@ footer a:hover{color:var(--text)}
     ["Actions", "⌫", "Uninstall an app", () => go("f-apps")],
     ["Actions", "⚙", "Run maintenance", () => go("f-optimize")],
     ["Actions", "∿", "Open Monitor", () => go("f-monitor")],
+    ["Actions", "⌥", "View source on GitHub", () => location.href = "https://github.com/xeveio/tidybug"],
     ["Navigate", "→", "Go to Features", () => go("features"), "⌘1"],
     ["Navigate", "→", "Go to Screens", () => go("screens"), "⌘2"],
     ["Navigate", "→", "Go to Safety", () => go("safety"), "⌘3"],
