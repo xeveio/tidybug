@@ -12,12 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Every suite has a 1-minute time limit, so a hang fails with the
-      # test's name instead of silently eating the job timeout.
+      # Runs each suite on its own under a hard 2-minute cap with live output,
+      # so a hung suite is killed and named instead of eating the job timeout.
       - name: Core tests
-        working-directory: Packages/TidyBugCore
-        timeout-minutes: 10
-        run: swift test
+        timeout-minutes: 25
+        run: scripts/ci-test.sh
 
       - name: Build app (unsigned)
         timeout-minutes: 15
