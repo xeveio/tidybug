@@ -68,7 +68,13 @@ import UniformTypeIdentifiers
     }
 }
 
-@Suite(.timeLimit(.minutes(1))) struct SimilarImageTests {
+/// Vision's image feature print (`VNGenerateImageFeaturePrintRequest`) never
+/// returns on GitHub's virtualized macOS runners (no Neural Engine), and the call
+/// is synchronous, so no time limit can interrupt it. These run locally only.
+@Suite(.timeLimit(.minutes(1)),
+       .enabled(if: ProcessInfo.processInfo.environment["GITHUB_ACTIONS"] == nil,
+                "Vision feature prints hang on GitHub-hosted macOS VMs; run locally"))
+struct SimilarImageTests {
     /// Draws a scene (gradient + shapes) so Vision has real structure to compare.
     private func makeImage(width: Int, height: Int, variant: Int) -> CGImage {
         let ctx = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
