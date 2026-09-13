@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import TidyBugCore
 
-@Suite struct MaintenanceTests {
+@Suite(.timeLimit(.minutes(1))) struct MaintenanceTests {
     @Test func catalogIsWellFormed() {
         let tasks = Maintenance.tasks
         #expect(Set(tasks.map(\.id)).count == tasks.count, "task ids must be unique")

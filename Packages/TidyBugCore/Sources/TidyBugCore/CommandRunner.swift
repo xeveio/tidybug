@@ -42,14 +42,39 @@ public enum CommandRunner {
             return CommandResult(status: 126, output: error.localizedDescription)
         }
         let deadline = Date().addingTimeInterval(timeout)
-        while process.isRunning {
-            if Date() > deadline { process.terminate(); break }
+        var timedOut = false
+        while process.isRunning && Date() < deadline {
             Thread.sleep(forTimeInterval: 0.05)
+        }
+        if process.isRunning {
+            // SIGTERM, then SIGKILL if the process ignores it.
+            timedOut = true
+            process.terminate()
+            let grace = Date().addingTimeInterval(2)
+            while process.isRunning && Date() < grace { Thread.sleep(forTimeInterval: 0.05) }
+            if process.isRunning { kill(process.processIdentifier, SIGKILL) }
         }
         process.waitUntilExit()
         pipe.fileHandleForReading.readabilityHandler = nil
-        output.append(pipe.fileHandleForReading.readDataToEndOfFile())
-        return CommandResult(status: process.terminationStatus, output: output.string)
+        // Never block here: a grandchild that inherited the pipe can keep it open
+        // indefinitely, so only drain what is already buffered.
+        output.append(Self.drainNonBlocking(pipe.fileHandleForReading))
+        try? pipe.fileHandleForReading.close()
+        if timedOut { output.append(Data("\n[timed out after \(Int(timeout))s]".utf8)) }
+        return CommandResult(status: timedOut ? 124 : process.terminationStatus, output: output.string)
+    }
+
+    private static func drainNonBlocking(_ handle: FileHandle) -> Data {
+        let fd = handle.fileDescriptor
+        let flags = fcntl(fd, F_GETFL)
+        _ = fcntl(fd, F_SETFL, flags | O_NONBLOCK)
+        var data = Data()
+        var buffer = [UInt8](repeating: 0, count: 65_536)
+        while true {
+            let n = read(fd, &buffer, buffer.count)
+            if n > 0 { data.append(buffer, count: n) } else { break }
+        }
+        return data
     }
 
     public static func run(_ tool: String, _ arguments: [String], timeout: TimeInterval = 600) async -> CommandResult {

@@ -30,7 +30,7 @@ final class Sandbox {
     var guardRail: SafetyGuard { SafetyGuard(home: root.path) }
 }
 
-@Suite struct SizerTests {
+@Suite(.timeLimit(.minutes(1))) struct SizerTests {
     @Test func countsHardlinksOnce() throws {
         let sb = try Sandbox()
         let a = try sb.file("a/data.bin", bytes: 1_000_000)
@@ -54,7 +54,7 @@ final class Sandbox {
     }
 }
 
-@Suite struct GuardTests {
+@Suite(.timeLimit(.minutes(1))) struct GuardTests {
     @Test func rejectsDangerousPaths() throws {
         let sb = try Sandbox()
         let g = sb.guardRail
@@ -92,7 +92,7 @@ final class Sandbox {
     }
 }
 
-@Suite struct CleanerTests {
+@Suite(.timeLimit(.minutes(1))) struct CleanerTests {
     @Test func trashesAndLogs() async throws {
         let sb = try Sandbox()
         let target = try sb.file("Library/Caches/junk/blob.bin", bytes: 50_000)
@@ -121,7 +121,7 @@ final class Sandbox {
     }
 }
 
-@Suite struct RuleTests {
+@Suite(.timeLimit(.minutes(1))) struct RuleTests {
     @Test func deviceSupportKeepsNewestPerModel() {
         let names = ["iPhone14,3 26.3.1 (23D1)", "iPhone14,3 26.5 (23F1)", "iPhone14,3 26.6 (23G1)",
                      "iPhone15,2 18.1 (22B1)", "16.0 (20A362)", "17.2 (21C1)"]

@@ -5,7 +5,7 @@ import Testing
 import UniformTypeIdentifiers
 @testable import TidyBugCore
 
-@Suite struct DuplicateFinderTests {
+@Suite(.timeLimit(.minutes(1))) struct DuplicateFinderTests {
     private func write(_ sb: Sandbox, _ rel: String, seed: UInt8, count: Int = 300_000) throws -> URL {
         let url = sb.root.appendingPathComponent(rel)
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
@@ -68,7 +68,7 @@ import UniformTypeIdentifiers
     }
 }
 
-@Suite struct SimilarImageTests {
+@Suite(.timeLimit(.minutes(1))) struct SimilarImageTests {
     /// Draws a scene (gradient + shapes) so Vision has real structure to compare.
     private func makeImage(width: Int, height: Int, variant: Int) -> CGImage {
         let ctx = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,

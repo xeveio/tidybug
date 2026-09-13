@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import TidyBugCore
 
-@Suite struct AppLeftoverTests {
+@Suite(.timeLimit(.minutes(1))) struct AppLeftoverTests {
     /// Builds a fake ~/Library inside a sandbox.
     private func library(_ sb: Sandbox) throws -> URL {
         try sb.dir("Library")
