@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy — TidyBug</title>
+<meta name="description" content="TidyBug's privacy policy: what the app does with your files (nothing leaves your Mac) and what this website measures.">
+<link rel="canonical" href="https://tidybug.xeve.io/privacy">
+<meta name="theme-color" content="#0A0B0D">
+<style>
+  :root{color-scheme:dark}
+  body{margin:0;background:#0A0B0D;color:#E6E8EB;font:16px/1.7 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:44rem;margin:0 auto;padding:64px 20px 80px}
+  a{color:#FF6B66}
+  .back{font-size:14px;text-decoration:none;color:#9AA0A8}
+  h1{font-size:34px;letter-spacing:-.02em;margin:18px 0 6px}
+  h2{font-size:18px;margin:36px 0 8px}
+  .date{color:#9AA0A8;font-size:14px;margin:0 0 20px}
+  code{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.9em;background:#15171B;padding:1px 5px;border-radius:4px}
+  footer{color:#9AA0A8;font-size:14px;border-top:1px solid #1E2126;margin-top:48px;padding-top:20px}
+</style>
+<!-- Analytics for Xeve's websites (not the apps): Google Analytics, and PostHog's "Xeve websites"
+     project on posthog.doteosde.com. One cookie is shared across xeve.io and its subdomains so a
+     visit can be followed from site to site. No session recordings; Do Not Track is respected.
+     Clicks on download, App Store and TestFlight links are counted as "download_clicked". -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-21SSB74NQD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-21SSB74NQD');
+</script>
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags onSessionId identify setPersonProperties group resetGroups reset get_distinct_id getGroups get_session_id alias set_config opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_property getSessionProperty debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  posthog.init('phc_kQKVr2TxsUu3rFr2tZbumUNzf3ekg3A5sQR2WKH9vr5g', {
+    api_host: 'https://posthog.doteosde.com',
+    person_profiles: 'identified_only',
+    persistence: 'localStorage+cookie',
+    cross_subdomain_cookie: true,
+    capture_pageview: true,
+    capture_pageleave: true,
+    autocapture: false,
+    disable_session_recording: true,
+    respect_dnt: true,
+  });
+  posthog.register({ site: location.hostname });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    var h = a.href;
+    if (!/\/download(\/|$|\?)|\.dmg(\?|$)|apps\.apple\.com|testflight\.apple\.com|\/releases(\/|$)/.test(h)) return;
+    var label = (a.textContent || '').trim().slice(0, 60);
+    posthog.capture('download_clicked', { href: h, label: label });
+    if (typeof gtag === 'function') gtag('event', 'download_clicked', { link_url: h, link_text: label });
+  }, true);
+</script>
+</head>
+<body>
+<main>
+  <a class="back" href="/">← TidyBug</a>
+  <h1>Privacy</h1>
+  <p class="date">Last updated 14 September 2026</p>
+
+  <h2>The app</h2>
+  <p>TidyBug runs entirely on your Mac. It scans your disk read-only, shows you what it found, and moves
+  only what you approve to the Trash. Nothing about your files, your disk or how you use the app is sent
+  anywhere: the app has no telemetry, no analytics and no account.</p>
+  <p>Every operation it performs is logged on your Mac, in
+  <code>~/Library/Logs/TidyBug/operations.jsonl</code>, so you can see exactly what it did. The source code
+  is public at <a href="https://github.com/xeveio/tidybug">github.com/xeveio/tidybug</a>.</p>
+
+  <h2>This website</h2>
+  <p>tidybug.xeve.io uses Google Analytics and PostHog, which Xeve runs on its own server, to count visits
+  and clicks on the download button. They record the pages you view, the page that sent you, your browser
+  and device, and a rough location from your IP address. A cookie shared across xeve.io and its app sites
+  lets us see a visit move between them. There are no session recordings, and browsers that send Do Not
+  Track aren't counted by PostHog. None of this is in the app itself.</p>
+
+  <h2>Contact</h2>
+  <p>Questions go to <a href="mailto:hello@xeve.io">hello@xeve.io</a>.</p>
+
+  <footer>© 2026 Xeve · <a href="https://xeve.io/privacy">Xeve's privacy policy</a></footer>
+</main>
+</body>
+</html>
