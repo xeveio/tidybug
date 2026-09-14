@@ -157,6 +157,7 @@ final class SystemMonitor {
     @ObservationIgnored private var watchers = 0
     @ObservationIgnored private var task: Task<Void, Never>?
     @ObservationIgnored private let sampler = MonitorSampler()
+    @ObservationIgnored private var volumeCache: (info: VolumeInfo, at: Date)?
 
     init() {
         Task.detached(priority: .utility) { [weak self] in
@@ -270,7 +271,12 @@ final class SystemMonitor {
         let swapGB = Double(memory.swapUsed) / 1_073_741_824
         f.append(HealthFactor(label: "Swap", detail: String(format: "%.1f GB in use", swapGB), penalty: min(10, Int(swapGB * 2))))
 
-        let vol = VolumeInfo.current()
+        // Capacity changes slowly; a filesystem lookup every second on the main
+        // actor was wasted work. Refresh it every 30 s.
+        if volumeCache == nil || Date().timeIntervalSince(volumeCache!.at) > 30 {
+            volumeCache = (VolumeInfo.current(), Date())
+        }
+        let vol = volumeCache!.info
         let freeFraction = vol.total > 0 ? Double(vol.available) / Double(vol.total) : 1
         let diskPenalty = freeFraction < 0.1 ? 20 : (freeFraction < 0.2 ? 10 : 0)
         f.append(HealthFactor(label: "Disk space", detail: String(format: "%.0f%% free", freeFraction * 100), penalty: diskPenalty))

@@ -230,7 +230,9 @@ private struct Sparkline: View {
         .chartXScale(domain: xDomain)
         .chartYScale(domain: 0...yMax)
         .chartLegend(.hidden)
-        .animation(.linear(duration: 0.9), value: points.last?.id)
+        // No per-tick animation: animating 7 charts for 0.9 s every second kept
+        // them redrawing ~90% of the time (the Monitor tab's main CPU cost).
+        .transaction { $0.animation = nil }
     }
 }
 
@@ -290,7 +292,7 @@ private struct CoreBars: View {
                 legend(Palette.info, "Performance")
             }
         }
-        .animation(.tidy, value: cores)
+        .animation(.easeOut(duration: 0.25), value: cores)
     }
 
     private func legend(_ color: Color, _ label: String) -> some View {
@@ -360,7 +362,7 @@ private struct StackedBar: View {
                 RoundedRectangle(cornerRadius: 2).fill(Color.white.opacity(0.05))
             }
         }
-        .animation(.tidy, value: segments.map(\.0))
+        .animation(.easeOut(duration: 0.25), value: segments.map(\.0))
     }
 }
 
