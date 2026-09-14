@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Changelog · TidyBug</title>
+<meta name="description" content="What's new in each version of TidyBug, the macOS disk cleaner for developers.">
+<meta name="theme-color" content="#0A0B0D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0B0D'/%3E%3Ccircle cx='32' cy='17' r='8' fill='%232A2D33'/%3E%3Cpath d='M30.6 20a17 17 0 0 0 0 34z M33.4 20a17 17 0 0 1 0 34z' fill='%23FF5F57'/%3E%3Ccircle cx='24' cy='32' r='3' fill='%230A0B0D'/%3E%3Ccircle cx='40' cy='32' r='3' fill='%230A0B0D'/%3E%3Ccircle cx='23' cy='43' r='2.3' fill='%230A0B0D'/%3E%3Ccircle cx='41' cy='43' r='2.3' fill='%230A0B0D'/%3E%3C/svg%3E">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-21SSB74NQD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-21SSB74NQD');</script>
+<style>
+:root{--bg:#0A0B0D;--surface:#111317;--raised:#181A1F;--border:rgba(255,255,255,.075);--border-2:rgba(255,255,255,.14);
+  --text:#EDEEF0;--text-2:#8C919A;--text-3:#5D626C;--accent:#FF5F57;--success:#3DD68C;--info:#5B9CF6;--warning:#F5B545;
+  --sans:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;--mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.2px);background-size:22px 22px;-webkit-mask:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 80%);mask:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 80%)}
+a{color:inherit}
+.wrap{width:min(860px,100%);margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+.top{position:sticky;top:0;z-index:10;background:rgba(10,11,13,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.top .wrap{display:flex;align-items:center;gap:18px;height:60px;width:min(1200px,100%)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;font:700 17px/1 var(--sans)}
+.logo svg{width:22px;height:22px}
+.top nav{margin-left:auto;display:flex;gap:4px}
+.top nav a{text-decoration:none;color:var(--text-2);font-size:14px;padding:6px 10px;border-radius:7px}
+.top nav a:hover,.top nav a[aria-current]{color:var(--text);background:rgba(255,255,255,.05)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:9px;font:600 14px/1 var(--sans);text-decoration:none;background:var(--accent);color:#fff}
+header.page{padding-block:clamp(48px,7vw,88px) 24px}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(38px,5.4vw,60px);line-height:1;letter-spacing:-.035em;margin:14px 0 12px;font-weight:800}
+.lead{color:var(--text-2);font-size:18px;margin:0}
+.lead a{color:var(--text)}
+.release{display:grid;grid-template-columns:150px minmax(0,1fr);gap:28px;padding-block:36px;border-top:1px solid var(--border)}
+.release:first-of-type{border-top:0}
+.meta{position:sticky;top:84px;align-self:start}
+.ver{font:600 22px/1 var(--mono);letter-spacing:-.02em}
+.date{color:var(--text-3);font-size:13px;margin-top:8px}
+.tag{display:inline-block;margin-top:10px;font:500 11px/1 var(--mono);padding:4px 7px;border-radius:5px}
+.tag.latest{background:rgba(61,214,140,.14);color:var(--success)}
+.release h2{font-size:22px;letter-spacing:-.02em;margin:0 0 6px}
+.release p{color:var(--text-2);margin:0 0 14px}
+.release h3{font:600 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin:22px 0 10px}
+ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+li{position:relative;padding-left:20px;color:var(--text)}
+li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:2px;background:var(--dot,var(--info))}
+li.fix{--dot:var(--success)}li.perf{--dot:var(--warning)}li.new{--dot:var(--info)}
+li span{color:var(--text-2)}
+code{font:400 13.5px var(--mono);background:var(--raised);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+.links{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:14px}
+.links a{color:var(--text-2);text-decoration:none}.links a:hover{color:var(--text)}
+@media (max-width:640px){.release{grid-template-columns:minmax(0,1fr);gap:14px}.meta{position:static}.top nav a:not([aria-current]){display:none}}
+footer{border-top:1px solid var(--border);padding-block:32px;margin-top:40px;color:var(--text-3);font-size:13.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px 24px;width:min(1200px,100%)}
+footer nav{display:flex;gap:18px;margin-left:auto}footer a{text-decoration:none}footer a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="TidyBug home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="15" r="9" fill="#2A2D33" stroke="rgba(255,255,255,.15)"/><path d="M30.5 19a19 19 0 0 0 0 38z M33.5 19a19 19 0 0 1 0 38z" fill="#FF5F57"/><circle cx="23" cy="33" r="3.4" fill="#0A0B0D"/><circle cx="41" cy="33" r="3.4" fill="#0A0B0D"/><circle cx="22" cy="46" r="2.6" fill="#0A0B0D"/><circle cx="42" cy="46" r="2.6" fill="#0A0B0D"/></svg>
+      TidyBug
+    </a>
+    <nav aria-label="Site"><a href="/#features">Features</a><a href="/#safety">Safety</a><a href="/changelog" aria-current="page">Changelog</a><a href="https://github.com/xeveio/tidybug">GitHub</a></nav>
+    <a class="btn" href="/download">Download</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <header class="page">
+    <span class="eyebrow">Changelog</span>
+    <h1>What's new in TidyBug.</h1>
+    <p class="lead">Every release, newest first. Installed copies update automatically; you can also <a href="/download">download the latest version</a> or browse <a href="https://github.com/xeveio/tidybug/releases">releases on GitHub</a>.</p>
+  </header>
+
+  <article class="release" id="v1.0.1">
+    <div class="meta"><div class="ver">1.0.1</div><div class="date">14 September 2026</div><span class="tag latest">Latest</span></div>
+    <div>
+      <h2>A faster Monitor</h2>
+      <p>A performance update. The Monitor tab was redrawing continuously, keeping close to a full CPU core busy whenever it was open.</p>
+      <h3>Performance</h3>
+      <ul>
+        <li class="perf">The Monitor tab uses about 12% of one core instead of up to 90%. <span>The live indicator and the per-second numbers no longer animate, so the tab no longer redraws continuously, and the charts draw faster.</span></li>
+        <li class="perf">The notch overlay and the app's panels no longer spend CPU on invisible shadows.</li>
+      </ul>
+      <h3>Fixes</h3>
+      <ul>
+        <li class="fix">System commands that time out, used by Clean and Optimize, can no longer hang.</li>
+      </ul>
+      <div class="links"><a href="https://github.com/xeveio/tidybug/releases/tag/tidybug-v1.0.1">GitHub release →</a><a href="https://github.com/xeveio/tidybug/compare/tidybug-v1.0.0...tidybug-v1.0.1">All changes →</a></div>
+    </div>
+  </article>
+
+  <article class="release" id="v1.0.0">
+    <div class="meta"><div class="ver">1.0.0</div><div class="date">13 September 2026</div></div>
+    <div>
+      <h2>First public release</h2>
+      <p>TidyBug finds regenerable caches, build artifacts, duplicates and forgotten installers, shows exactly what each item is and where it lives, and moves only what you approve to the Trash.</p>
+      <h3>Features</h3>
+      <ul>
+        <li class="new"><b>Clean</b> <span>checks 19 known locations (Xcode DerivedData, old iOS Device Support, simulator and package-manager caches, app caches, logs, installers, database dumps) and groups results by risk.</span></li>
+        <li class="new"><b>Space</b> <span>is an interactive, hardlink-aware sunburst map of any folder, with the Collector: drag from any view or Finder, then Delete All.</span></li>
+        <li class="new"><b>Projects</b> <span>finds <code>node_modules</code>, <code>build</code>, <code>.venv</code>, <code>Pods</code>, <code>target</code> and more, and checks each project's age and lockfile.</span></li>
+        <li class="new"><b>Duplicates</b> <span>finds exact copies (SHA-256) and similar photos (Vision); one copy in every group is always kept.</span></li>
+        <li class="new"><b>Large Files</b>, <b>Apps</b> <span>(uninstall with leftovers),</span> <b>Optimize</b> <span>(explainable maintenance) and</span> <b>Monitor</b> <span>(live system health).</span></li>
+        <li class="new">A ⌘K command palette, a menu bar companion, a notch overlay with live CPU and memory, low-space notifications and Shortcuts actions.</li>
+        <li class="new">Signed with Developer ID, notarized by Apple, and updated automatically with Sparkle and EdDSA signatures.</li>
+      </ul>
+      <div class="links"><a href="https://github.com/xeveio/tidybug/releases/tag/tidybug-v1.0.0">GitHub release →</a></div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Xeve · <a href="https://github.com/xeveio/tidybug/blob/main/LICENSE">GPL-3.0</a></span>
+    <nav><a href="/">Home</a><a href="/changelog">Changelog</a><a href="/download">Download</a><a href="https://github.com/xeveio/tidybug">GitHub</a></nav>
+  </div>
+</footer>
+</body>
+</html>
