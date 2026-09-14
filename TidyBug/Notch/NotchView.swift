@@ -35,7 +35,10 @@ struct NotchView: View {
             .frame(width: size.width + 2 * flare, height: size.height)
             .clipShape(shape)
             .overlay { if !g.hasNotch { shape.stroke(Color.white.opacity(0.1), lineWidth: 1) } }
-            .shadow(color: .black.opacity(state.expanded ? 0.55 : 0), radius: 18, y: 10)
+            // Radius 0 when collapsed: a transparent 18 pt shadow still costs a CPU blur
+            // each time the notch redraws its numbers (every second, all day).
+            .shadow(color: .black.opacity(state.expanded ? 0.55 : 0),
+                    radius: state.expanded ? 18 : 0, y: state.expanded ? 10 : 0)
             Spacer(minLength: 0)
         }
         .frame(width: g.canvas.width, height: g.canvas.height, alignment: .top)

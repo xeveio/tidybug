@@ -56,7 +56,8 @@ private struct MonitorHeader: View {
             HStack(spacing: 14) {
                 HStack(spacing: 6) {
                     Circle().fill(m.isRunning ? Palette.success : Palette.textTertiary).frame(width: 6, height: 6)
-                        .phaseAnimator([0.4, 1.0]) { dot, phase in dot.opacity(phase) }
+                        // Static on purpose: a forever-looping phaseAnimator here kept the whole
+                        // Monitor tab redrawing at display refresh rate (~50% CPU in Debug).
                     Text("Live · 1 s").font(.mono(11)).foregroundStyle(Palette.textSecondary)
                 }
                 Divider().frame(height: 14)
@@ -163,8 +164,8 @@ private struct BigPercent: View {
         Text(String(format: "%.0f%%", value * 100))
             .font(.number(28))
             .foregroundStyle(Palette.text)
-            .contentTransition(.numericText(value: value * 100))
-            .animation(.tidy, value: Int(value * 100))
+            // No rolling-digit animation: this value changes every second, so it
+            // would animate nonstop. Plain updates, like Activity Monitor.
     }
 }
 
@@ -206,18 +207,18 @@ private struct Sparkline: View {
             ForEach(points) { p in
                 AreaMark(x: .value("t", p.id), y: .value("v", min(p.value, yMax)))
                     .foregroundStyle(LinearGradient(colors: [color.opacity(0.32), color.opacity(0.02)], startPoint: .top, endPoint: .bottom))
-                    .interpolationMethod(.monotone)
+                    .interpolationMethod(.linear)
                 LineMark(x: .value("t", p.id), y: .value("v", min(p.value, yMax)), series: .value("s", "a"))
                     .foregroundStyle(color)
                     .lineStyle(StrokeStyle(lineWidth: 1.5))
-                    .interpolationMethod(.monotone)
+                    .interpolationMethod(.linear)
             }
             if let secondary {
                 ForEach(secondary) { p in
                     LineMark(x: .value("t", p.id), y: .value("v", min(p.value, yMax)), series: .value("s", "b"))
                         .foregroundStyle(secondaryColor)
                         .lineStyle(StrokeStyle(lineWidth: 1.5))
-                        .interpolationMethod(.monotone)
+                        .interpolationMethod(.linear)
                 }
             }
         }
@@ -310,7 +311,7 @@ private struct MemoryPanel: View {
         let mem = m.memory
         MetricPanel(title: "Memory", symbol: "memorychip", trailing: "\(m.machine.memoryGB) GB total") {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                BytesText(bytes: Int64(mem.used)).font(.number(28)).foregroundStyle(Palette.text)
+                Text(Int64(mem.used).formattedBytes).monospacedDigit().font(.number(28)).foregroundStyle(Palette.text)
                 Text("used").font(.system(size: 12)).foregroundStyle(Palette.textTertiary)
                 Spacer()
                 Pill(text: mem.pressure.label,
@@ -342,7 +343,6 @@ private struct MemoryPanel: View {
             Text(label).font(.system(size: 11.5)).foregroundStyle(Palette.textSecondary)
             Spacer()
             Text(Int64(bytes).formattedBytes).font(.mono(11)).foregroundStyle(Palette.text)
-                .contentTransition(.numericText())
         }
     }
 }
@@ -396,7 +396,7 @@ private struct DiskPanel: View {
         let vol = VolumeInfo.current()
         MetricPanel(title: "Disk", symbol: "internaldrive", trailing: "Macintosh HD") {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                BytesText(bytes: vol.available).font(.number(28)).foregroundStyle(Palette.text)
+                Text(vol.available.formattedBytes).monospacedDigit().font(.number(28)).foregroundStyle(Palette.text)
                 Text("free of \(vol.total.formattedBytes)").font(.system(size: 12)).foregroundStyle(Palette.textTertiary)
                 Spacer()
             }
@@ -513,7 +513,7 @@ private struct ProcessesPanel: View {
                         ProcessRow(process: p, fraction: p.cpu / peak)
                     }
                 }
-                .animation(.tidy, value: m.processes.map(\.pid))
+                .transaction { $0.animation = nil } // re-sorts every 2 s; don't animate it
             }
         }
         .padding(16)

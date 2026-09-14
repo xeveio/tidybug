@@ -143,7 +143,9 @@ struct Panel: ViewModifier {
                     RoundedRectangle(cornerRadius: radius, style: .continuous)
                         .strokeBorder(lifted ? Palette.borderStrong : Palette.border, lineWidth: 1)
                 }
-                .shadow(color: .black.opacity(lifted ? 0.5 : 0), radius: 18, y: 10)
+                // Radius 0 when not lifted: a transparent 18 pt shadow still costs a CPU
+                // blur on every redraw of the panel (8 panels update each second on Monitor).
+                .shadow(color: .black.opacity(lifted ? 0.5 : 0), radius: lifted ? 18 : 0, y: lifted ? 10 : 0)
         }
     }
 }
@@ -211,7 +213,8 @@ private struct TidyButtonBody: View {
                         .overlay(shape.strokeBorder(
                             LinearGradient(colors: [.white.opacity(0.28), .white.opacity(0.02)], startPoint: .top, endPoint: .bottom),
                             lineWidth: 1))
-                        .shadow(color: Palette.accent.opacity(hovering && isEnabled ? 0.35 : 0.0), radius: 10, y: 2)
+                        .shadow(color: Palette.accent.opacity(hovering && isEnabled ? 0.35 : 0.0),
+                                radius: hovering && isEnabled ? 10 : 0, y: hovering && isEnabled ? 2 : 0)
                 case .secondary:
                     shape.fill(hovering ? Color(hex: 0x1F2228) : Palette.raised)
                         .overlay(shape.strokeBorder(hovering ? Palette.borderStrong : Palette.border, lineWidth: 1))

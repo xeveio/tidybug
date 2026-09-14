@@ -212,7 +212,8 @@ struct TabButton: View {
                 }
                 if busy {
                     Circle().fill(Palette.accent).frame(width: 5, height: 5)
-                        .phaseAnimator([0.35, 1.0]) { dot, phase in dot.opacity(phase) }
+                        // Static on purpose: a looping phaseAnimator redraws the top bar
+                        // at display refresh rate for the whole duration of every scan.
                 }
             }
             .font(.system(size: 12.5, weight: .medium))
