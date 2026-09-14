@@ -10,7 +10,7 @@
 <meta property="og:description" content="A native macOS disk cleaner for developers. DerivedData, node_modules, simulators, duplicates, app leftovers. Review everything, delete in one go.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tidybug.xeve.io/">
-<meta property="og:image" content="https://tidybug.xeve.io/og.png">
+<meta property="og:image" content="https://tidybug.xeve.io/og.png?v=__V__">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0B0D'/%3E%3Ccircle cx='32' cy='17' r='8' fill='%232A2D33'/%3E%3Cpath d='M30.6 20a17 17 0 0 0 0 34z M33.4 20a17 17 0 0 1 0 34z' fill='%23FF5F57'/%3E%3Ccircle cx='24' cy='32' r='3' fill='%230A0B0D'/%3E%3Ccircle cx='40' cy='32' r='3' fill='%230A0B0D'/%3E%3Ccircle cx='23' cy='43' r='2.3' fill='%230A0B0D'/%3E%3Ccircle cx='41' cy='43' r='2.3' fill='%230A0B0D'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/icon.png">
@@ -375,7 +375,7 @@ footer a:hover{color:var(--text)}
         <div><i style="background:var(--violet)"></i><span>OrbStack / Docker VM · <b>docker system prune</b></span><span>34 GB</span></div>
       </div>
     </div>
-    <div class="shot reveal"><img src="/shots/clean.png" width="2440" height="1600" alt="TidyBug Clean tab listing reclaimable categories" loading="lazy"></div>
+    <div class="shot reveal"><img src="/shots/clean.png?v=__V__" width="2440" height="1600" alt="TidyBug Clean tab listing reclaimable categories" loading="lazy"></div>
   </div>
 </section>
 
@@ -511,7 +511,7 @@ footer a:hover{color:var(--text)}
       <p class="lead">A native SwiftUI app built for macOS 26: SF Mono paths, real sizes, Swift Charts, and nothing between you and the data.</p>
     </div>
     <div class="tabs" role="tablist" id="tabs"></div>
-    <div class="stage shot"><img id="stage-img" src="/shots/overview.png" width="2440" height="1600" alt="" loading="lazy"></div>
+    <div class="stage shot"><img id="stage-img" src="/shots/overview.png?v=__V__" width="2440" height="1600" alt="" loading="lazy"></div>
     <p class="caption" id="caption"></p>
   </div>
 </section>
@@ -562,7 +562,7 @@ footer a:hover{color:var(--text)}
 <section id="download" aria-labelledby="download-title" style="padding-top:0">
   <div class="wrap">
     <div class="dl">
-      <img src="/icon.png" width="512" height="512" alt="TidyBug app icon">
+      <img src="/icon.png?v=__V__" width="512" height="512" alt="TidyBug app icon">
       <div>
         <h2 id="download-title" style="font-size:clamp(28px,3.4vw,42px)">Get TidyBug for Mac.</h2>
         <p class="lead" style="margin-top:12px">Free. Signed with Developer ID and notarized by Apple, so it opens without warnings. Updates arrive automatically, verified with an EdDSA signature before they install.</p>
@@ -923,13 +923,18 @@ footer a:hover{color:var(--text)}
   function show(i) {
     const [id, name, text] = SHOTS[i];
     tabs.querySelectorAll("button").forEach((b, j) => b.setAttribute("aria-selected", i === j));
-    img.style.opacity = 0;
-    const next = new Image(); next.src = `/shots/${id}.png`;
-    next.onload = () => { img.src = next.src; img.alt = `TidyBug ${name} screen`; img.style.opacity = 1; };
     cap.textContent = text;
+    const src = `/shots/${id}.png?v=__V__`;
+    if (img.getAttribute("src") === src) { img.style.opacity = 1; return; }
+    img.style.opacity = 0.35;
+    const next = new Image();
+    next.onload = () => { img.src = src; img.alt = `TidyBug ${name} screen`; img.style.opacity = 1; };
+    // Never leave the frame blank: keep the previous screenshot if this one fails.
+    next.onerror = () => { img.style.opacity = 1; cap.textContent = `${text} (screenshot unavailable)`; };
+    next.src = src;
   }
   show(0);
-  SHOTS.forEach(([id]) => { const p = new Image(); p.loading = "lazy"; p.src = `/shots/${id}.png`; });
+  SHOTS.forEach(([id]) => { const p = new Image(); p.src = `/shots/${id}.png?v=__V__`; });
 
   /* Hide screenshot frames whose image hasn't been published yet. */
   document.querySelectorAll(".shot img").forEach(im => {
