@@ -219,6 +219,11 @@ xmllint --noout "$OUT/appcast.xml" && echo "  appcast valid"
 # ---------------------------------------------------------------------------
 if $UPLOAD; then
   step "Upload to ${SPACE}/${SPACE_PREFIX}/ (served at ${PUBLIC_BASE}/)"
+  # Locally, the bucket-scoped key lives in ~/.secrets (created with doctl as
+  # "tidybug-release", readwrite on xeve-downloads only). CI passes env vars.
+  if [ -z "${DO_SPACES_KEY:-}" ] && [ -f "$HOME/.secrets/do-spaces-tidybug.env" ]; then
+    set -a; . "$HOME/.secrets/do-spaces-tidybug.env"; set +a
+  fi
   [ -n "${DO_SPACES_KEY:-}" ] && [ -n "${DO_SPACES_SECRET:-}" ] || die "DO_SPACES_KEY / DO_SPACES_SECRET not set"
   export AWS_ACCESS_KEY_ID="$DO_SPACES_KEY" AWS_SECRET_ACCESS_KEY="$DO_SPACES_SECRET" AWS_DEFAULT_REGION=nyc3
   s3() { aws s3 cp "$1" "$2" --endpoint-url "$SPACE_ENDPOINT" --acl public-read --content-type "$3" --only-show-errors; }
